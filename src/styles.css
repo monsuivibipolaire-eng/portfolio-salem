@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background-color: #f9fafb;  /* Fond global clair si besoin */
+}
+
+.parallax-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 120px;
+}
+
+/* Gradient shift clair pour contact */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Spin lent logo */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Lift hover */
+.hover\:lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Ripple non-bloquant */
+.menu-pill, .menu-pill-mobile {
+  position: relative;
+  overflow: hidden;
+}
+.menu-pill::before, .menu-pill-mobile::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);  /* Gris clair ripple */
+  transition: width 0.6s ease, height 0.6s ease;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  pointer-events: none;
+}
+.menu-pill:active::before, .menu-pill-mobile:active::before {
+  width: 300px;
+  height: 300px;
+}
+.menu-pill > *, .menu-pill-mobile > * {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Glow pulse clair */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+}
+.menu-pill:hover, .menu-pill-mobile:hover {
+  animation: glow-pulse 2s infinite;
+  border-color: rgba(0,0,0,0.2);
+}
+
+/* Mobile slide */
+.max-h-0 {
+  max-height: 0 !important;
+  opacity: 0;
+  padding: 0;
+}
+.max-h-screen {
+  max-height: 500px;
+  opacity: 1;
+}
+
+/* AOS */
+[data-aos] {
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Flip-left */
+@keyframes flip-left {
+  from { transform: perspective(400px) rotateY(-90deg); opacity: 0; }
+  to { transform: perspective(400px) rotateY(0deg); opacity: 1; }
+}
+[data-aos="flip-left"] {
+  transform-origin: center left;
+}
+
+/* Cursor */
+nav a, nav button {
+  cursor: pointer;
+}
+
+/* No black global - Force clair */
+* {
+  background-color: transparent !important;  /* Override si besoin */
+}
