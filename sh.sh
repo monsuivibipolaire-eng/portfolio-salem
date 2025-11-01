@@ -1,59 +1,49 @@
 #!/bin/bash
 
-# Script FIX Commandes : Build + Serve Production Séparé + npx Deploy Correct
-# Sépare ng serve/npx, base-href /CVSalemKamoun.com/, no malformed args
+# Script pour supprimer définitivement le background blanc du menu responsive (transparent + blur seulement)
 
-echo "🔧 Fix commande : Séparez serve/build + npx (no unknown args) + base-href correct..."
+HTML_FILE="src/app/app.component.html"
 
-cd $(pwd)
-
-# 1. Build prod (génère dist/browser optimisé - Requis avant serve/deploy)
-rm -rf dist
-ng build --configuration production --base-href /CVSalemKamoun.com/
-if [ $? -eq 0 ]; then
-  echo "✅ Build production OK : dist/portfolio-salem/browser/ (hashé, AOS/zone.js ~150KB)"
-  grep -i base dist/portfolio-salem/browser/index.html  # Confirme <base href="/CVSalemKamoun.com/">
-else
-  echo "❌ Build fail - npm install --legacy-peer-deps"
+if [ ! -f "$HTML_FILE" ]; then
+  echo "Erreur: $HTML_FILE non trouvé. Exécutez depuis la racine du projet."
   exit 1
 fi
 
-# 2. Serve production local (optimisé, base-href /CVSalemKamoun.com/ - Test sans npx)
-pkill -f "ng serve" 2>/dev/null
-ng serve --configuration production --base-href /CVSalemKamoun.com/ --open
-if [ $? -eq 0 ]; then
-  echo "✅ Serve production lancé : http://localhost:4200/CVSalemKamoun.com (auto-open, menu/AOS test)"
-  echo "   - Test local : Scroll hero → Fade-up expériences, console no 404 (base-href fixe assets)"
-  echo "   - Arrêt : Ctrl+C ; Puis deploy npx ci-dessous"
-else
-  echo "❌ Serve fail - Port occupé ? Ajoutez --port=4201"
-  ng serve --configuration production --base-href /CVSalemKamoun.com/ --port=4201 --open
+# Sauvegarde
+BACKUP="${HTML_FILE}.no-white-bg.bak"
+if [ ! -f "$BACKUP" ]; then
+  cp "$HTML_FILE" "$BACKUP"
+  echo "Sauvegarde créée: $BACKUP"
 fi
 
-# Pause pour test serve (manuel : Ctrl+C pour continuer script)
-read -p "Appuyez sur Entrée après test serve (Ctrl+C pour arrêter)..."
+# Nouveau style sans background (transparent par défaut, garde blur et border)
+NEW_STYLE='style="backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.1);"'
 
-# 3. Deploy npx séparé (après serve/build - Correct args : --base-href hyphen, dir/message)
-npm install --save-dev angular-cli-ghpages@latest --legacy-peer-deps
-npx angular-cli-ghpages --dir dist/portfolio-salem/browser --base-href /CVSalemKamoun.com/ --message "v1.1" --no-silent
-if [ $? -eq 0 ]; then
-  echo "✅ Deploy npx OK : Push gh-pages (live https://monsuivibipolaire-eng.github.io/CVSalemKamoun.com)"
-  echo "   - Fichiers : .nojekyll/404.html auto, index.html (base /CVSalemKamoun.com/)"
+# Awk pour matcher le div mobile et remplacer son style (supprime background, gère condensé)
+awk -v new_style="$NEW_STYLE" '
+/<div.*class.*md:hidden.*absolute.*top-full/ {
+  # Capture la ligne <div ... style="old_style"> et remplace par new_style
+  sub(/style="[^"]*"/, new_style);
+  print;
+  in_div = 1;
+  next
+}
+in_div && /<\/div>/ { in_div = 0; next }
+in_div { next }
+{ print }
+' "$HTML_FILE" > "${HTML_FILE}.tmp" && mv "${HTML_FILE}.tmp" "$HTML_FILE"
+
+# Fallback sed si awk rate (remplace tout le style par new_style, pour cas condensé)
+sed -i "s/style=\"[^\"]*background[^;]*;[^\"]*\"/style=\"$NEW_STYLE\"/g" "$HTML_FILE"
+sed -i "s/stylebackground[^;]*;backdrop-filter/sstyle=\"$NEW_STYLE\"/g" "$HTML_FILE"  # Condensé sans quotes
+
+# Vérifications
+if grep -q 'backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.1);"' "$HTML_FILE" && ! grep -q 'background: rgba(255,255,255' "$HTML_FILE"; then
+  echo "✓ Background blanc supprimé : menu responsive maintenant transparent (sans fond blanc, garde blur et bordure subtile)."
+  echo "Le menu s'affiche overlay clair sur le contenu, sans changement opacifiant en responsive."
 else
-  echo "❌ npx fail - Full : --repo=https://github.com/monsuivibipolaire-eng/CVSalemKamoun.com.git --name=Salem"
-  npx angular-cli-ghpages --dir dist/portfolio-salem/browser --base-href /CVSalemKamoun.com/ --message "v1.1" --no-silent --repo https://github.com/monsuivibipolaire-eng/CVSalemKamoun.com.git --name "Salem Kamoun" --email "kammoun.salem@gmail.com"
+  echo "❌ Suppression échouée. Éditez manuellement le div md:hidden absolute top-full : changez style=\"background: rgba(255,255,255,0.6); ...\" en style=\"backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.1);\"."
 fi
 
-echo ""
-echo "Erreurs résolues : Unknown args (commande malformée - Séparez ng serve et npx), base-href ( /CVSalemKamoun.com/ pas /portfolio-salem/)"
-echo "   - ng serve : --configuration production --base-href /CVSalemKamoun.com/ (local optimisé)"
-echo "   - npx : --dir dist/... --base-href /CVSalemKamoun.com/ --message \"v1.1\" (séparé, hyphen)"
-echo "   - Build : Avant serve/deploy (prod optimisé, no prod alias)"
-echo "Test Local : http://localhost:4200/CVSalemKamoun.com (hero gradient, menu cliquable AOS flip)"
-echo "Live : https://monsuivibipolaire-eng.github.io/CVSalemKamoun.com (CDN 2-5 min, routing no 404)"
-echo "Commandes Manuelles :"
-echo "   - Build: ng build --configuration production --base-href /CVSalemKamoun.com/"
-echo "   - Serve: ng serve --configuration production --base-href /CVSalemKamoun.com/ --open"
-echo "   - Deploy: npx angular-cli-ghpages --dir dist/portfolio-salem/browser --base-href /CVSalemKamoun.com/ --message \"v1.1\""
-echo "Docs : ng serve --help (--base-href string) ; angular-cli-ghpages --help (--base-href hyphen CLI) [web:63]"
-echo "Si port occupé : --port=4201 ; Base-href wrong : Assets 404 local/live"
+echo "Script exécuté. Relancez 'ng serve'. Testez burger mobile : menu transparent (inspectez F12 > Styles > div md:hidden : background doit être 'none' ou transparent)."
+echo "Si encore blanc, purgez cache navigateur (Ctrl+Shift+R) ou vérifiez CSS global (pas de !important sur background blanc)."
