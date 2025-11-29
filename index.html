@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salem Kamoun - Portfolio Expert</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Scrollbar Custom */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--secondary)); border-radius: 5px; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            z-index: 1000;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.7);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--secondary);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- Parallax Backgrounds --- */
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.15), transparent 60%),
+                        radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.15), transparent 50%);
+            background-attachment: fixed; /* Le cœur du parallax CSS simple */
+        }
+
+        /* --- Hero Section --- */
+        header {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.1);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .hero-desc {
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+        }
+
+        /* --- Sections Generic --- */
+        section {
+            padding: 100px 10%;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- Cards Glassmorphism --- */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- Experience Timeline --- */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .exp-item {
+            margin-left: 30px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .exp-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--secondary);
+        }
+
+        .exp-role { font-size: 1.3rem; color: #fff; font-weight: 700; }
+        .exp-company { color: var(--primary); font-weight: 600; margin-bottom: 10px; display: block; }
+        .exp-date { font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin-bottom: 15px; display: block; }
+
+        /* --- Skills --- */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* --- Projects Grid --- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card h3 { margin-bottom: 10px; color: #fff; }
+        .project-tech { margin: 15px 0; display: flex; gap: 5px; flex-wrap: wrap; }
+        .tech-pill { font-size: 0.7rem; padding: 4px 10px; background: rgba(79, 70, 229, 0.3); border-radius: 4px; }
+        .credentials { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-top: 15px; border-left: 3px solid var(--secondary); }
+
+        /* --- Contact --- */
+        .contact-container {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .contact-info { font-size: 1.2rem; margin: 20px 0; }
+        .contact-icon { color: var(--secondary); margin-right: 10px; }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Animations Elements (jQuery trigger) --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .nav-links { display: none; } /* Simple mobile fix: hide menu */
+            section { padding: 60px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="parallax-bg"></div>
+
+    <nav>
+        <div class="logo">SK.</div>
+        <ul class="nav-links">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#experience">Expériences</a></li>
+            <li><a href="#projects">Projets</a></li>
+            <li><a href="#skills">Compétences</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header id="home">
+        <div class="hero-content">
+            <img src="salem.png" alt="Salem Kamoun" class="profile-img">
+            <h1 class="hero-title">Salem Kamoun</h1>
+            <h2 class="hero-subtitle">Développeur Expert Fullstack JS & Automation IA</h2>
+            <p class="hero-desc">
+                15 ans d'expérience. Spécialisé en Angular, Firebase, Ionic et Node.js.
+                Je transforme vos idées en applications performantes et j'optimise vos processus via n8n.
+                Basé aux îles Kerkennah, Sfax, Tunisie.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="#contact" class="btn">Me Contacter</a>
+                <a href="https://www.linkedin.com/in/salem-kamoun" target="_blank" class="btn" style="background: rgba(255,255,255,0.1);">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+            </div>
+        </div>
+        
+        <div style="position: absolute; bottom: 50px; width: 100%; animation: bounce 2s infinite;">
+            <i class="fas fa-chevron-down" style="font-size: 24px; opacity: 0.5;"></i>
+        </div>
+    </header>
+
+    <section id="experience">
+        <h2 class="section-title">Expériences Professionnelles</h2>
+        <div class="timeline">
+            
+            <div class="exp-item glass-card fade-in-up">
+                <div class="exp-role">Développeur Fullstack JS (Angular, Node.js, Firebase)</div>
+                <span class="exp-company">Freelance | Kerkennah, Tunisie</span>
+                <span class="exp-date">Juin 2025 - Présent</span>
+                <p>Développement d'applications web et mobiles avec Angular, Ionic, Firebase. Intégration d'automatisation IA via n8n. UI responsive avec Angular Material.</p>
+            </div>
+
+            <div class="exp-item glass-card fade-in-up">
+                <div class="exp-role">Owner / Développeur</div>
+                <span class="exp-company">passOnBuddy.com</span>
+                <span class="exp-date">Jan 2022 - Fév 2023</span>
+                <p>Plateforme de mise en relation professionnelle. Connexion LinkedIn-freelancer pour publication rapide de tâches. Stack Fullstack JS.</p>
+            </div>
+
+            <div class="exp-item glass-card fade-in-up">
+                <div class="exp-role">Développeur FullStack JS</div>
+                <span class="exp-company">Refer | Tunisie</span>
+                <span class="exp-date">Juin 2020 - Déc 2021</span>
+                <p>Application mobile iOS/Android pour élargir le réseau LinkedIn. Technologies : JS, TypeScript, Firebase, Ionic, Figma.</p>
+            </div>
+
+             <div class="exp-item glass-card fade-in-up">
+                <div class="exp-role">Spécialiste Développement Web</div>
+                <span class="exp-company">Tedemis | Paris (Remote)</span>
+                <span class="exp-date">Fév 2011 - Août 2016</span>
+                <p>Développement de jeux concours pour Carrefour, Vogue, Disneyland Paris. PHP, MySQL, Zend Framework.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Projets & Réalisations</h2>
+        <p style="text-align: center; margin-bottom: 40px; color: var(--text-muted);">Une sélection d'applications développées et déployées.</p>
+        
+        <div class="projects-grid">
+            
+            <div class="project-card glass-card fade-in-up">
+                <h3><i class="fas fa-map-marked-alt"></i> Réclamations Kerkennah</h3>
+                <p>Plateforme citoyenne pour signaler des incidents (voirie, éclairage) avec géolocalisation et suivi.</p>
+                <div class="project-tech">
+                    <span class="tech-pill">Angular 17</span>
+                    <span class="tech-pill">Firebase</span>
+                    <span class="tech-pill">Leaflet Maps</span>
+                </div>
+                <a href="https://reclamationspourkerkennah.web.app/" target="_blank" class="btn" style="font-size: 0.8rem; padding: 8px 15px; margin-top: 10px;">Voir la démo</a>
+            </div>
+
+            <div class="project-card glass-card fade-in-up">
+                <h3><i class="fas fa-boxes"></i> Gestion de Stock</h3>
+                <p>App complète de gestion de produits, mouvements et alertes de stock.</p>
+                <div class="project-tech">
+                    <span class="tech-pill">Angular</span>
+                    <span class="tech-pill">PWA</span>
+                </div>
+                <div class="credentials">
+                    <strong>Accès démo :</strong><br>
+                    User: admin@gmail.com<br>
+                    Pass: admin123
+                </div>
+                <a href="https://gestiondestock-5eb46.web.app" target="_blank" class="btn" style="font-size: 0.8rem; padding: 8px 15px; margin-top: 10px;">Accéder</a>
+            </div>
+
+            <div class="project-card glass-card fade-in-up">
+                <h3><i class="fas fa-weight-hanging"></i> Baskoula (Pesage)</h3>
+                <p>Solution sur-mesure pour la gestion des opérations de pesée avec tableau de bord.</p>
+                <div class="credentials">
+                    <strong>Accès démo :</strong><br>
+                    User: admin@gmail.com<br>
+                    Pass: admin123
+                </div>
+                <a href="https://baskoula-db326.web.app/dashboard" target="_blank" class="btn" style="font-size: 0.8rem; padding: 8px 15px; margin-top: 10px;">Dashboard</a>
+            </div>
+
+            <div class="project-card glass-card fade-in-up">
+                <h3><i class="fas fa-ship"></i> LAMBARA Hosting</h3>
+                <p>Gestion pour un service d'hébergement de grands bateaux.</p>
+                <div class="credentials">
+                    <strong>Accès démo :</strong><br>
+                    User: majdi@gmail.com<br>
+                    Pass: admin123
+                </div>
+                <a href="https://monsuivibipolaire-eng.github.io/LAMBARAHosting" target="_blank" class="btn" style="font-size: 0.8rem; padding: 8px 15px; margin-top: 10px;">Accéder</a>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="skills" style="background: rgba(0,0,0,0.2);">
+        <h2 class="section-title">Compétences</h2>
+        <div class="glass-card fade-in-up" style="max-width: 800px; margin: 0 auto;">
+            <h3 style="margin-bottom: 20px; text-align: center;">Technologies</h3>
+            <div class="skills-grid">
+                <span class="skill-tag">Angular 17+</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">Firebase</span>
+                <span class="skill-tag">Ionic / Mobile</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">n8n / IA Automation</span>
+                <span class="skill-tag">Tailwind CSS</span>
+                <span class="skill-tag">Supabase</span>
+                <span class="skill-tag">PHP / MySQL</span>
+                <span class="skill-tag">HTML5 / CSS3</span>
+            </div>
+
+            <h3 style="margin: 30px 0 20px 0; text-align: center;">Langues</h3>
+            <div class="skills-grid">
+                <span class="skill-tag" style="border-color: var(--secondary);">Français (Natif/Bilingue)</span>
+                <span class="skill-tag" style="border-color: var(--secondary);">Arabe (Natif)</span>
+                <span class="skill-tag" style="border-color: var(--secondary);">Anglais (Intermédiaire)</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <h2 class="section-title">Formation</h2>
+        <div class="glass-card fade-in-up" style="max-width: 600px; margin: 0 auto; display: flex; align-items: center; gap: 20px;">
+            <div style="font-size: 3rem; color: var(--primary);">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div>
+                <h3>Diplôme Universitaire de Technologie (DUT)</h3>
+                <p style="color: var(--text-muted);">Institut Supérieur des Sciences Appliquées et de Technologie de Sousse (ISSAT)</p>
+                <p style="font-size: 0.9rem;">Sept 2004 - Juil 2008</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container glass-card fade-in-up">
+            <h2 style="margin-bottom: 30px;">Prêt à collaborer ?</h2>
+            <p style="margin-bottom: 30px;">Discutons de votre projet d'application ou d'automatisation.</p>
+            
+            <div class="contact-info">
+                <i class="fas fa-phone contact-icon"></i> +216 28 606 748
+            </div>
+            <div class="contact-info">
+                <i class="fas fa-envelope contact-icon"></i> kammoun.salem@gmail.com
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <a href="mailto:kammoun.salem@gmail.com" class="btn" style="padding: 15px 40px; font-size: 1.1rem;">
+                    Envoyer un message
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Salem Kamoun. Tous droits réservés.</p>
+        <p>Kerkennah Islands - Sfax - Tunisia</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            
+            // 1. Animation d'entrée (Hero)
+            $('.hero-content').animate({ opacity: 1, top: '0px' }, 1000);
+            $('.hero-content').css('transform', 'translateY(0)');
+
+            // 2. Smooth Scrolling pour les ancres
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if(target.length) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 80 // Offset pour le header fixed
+                    }, 800);
+                }
+            });
+
+            // 3. Gestion du Scroll (Navbar glass & Animations Fade-in)
+            $(window).scroll(function() {
+                var scroll = $(window).scrollTop();
+
+                // Navbar effect
+                if (scroll > 50) {
+                    $('nav').css('background', 'rgba(15, 23, 42, 0.95)');
+                    $('nav').css('box-shadow', '0 4px 20px rgba(0,0,0,0.3)');
+                } else {
+                    $('nav').css('background', 'rgba(15, 23, 42, 0.7)');
+                    $('nav').css('box-shadow', 'none');
+                }
+
+                // Parallax Text Effect (Subtle movement of hero content)
+                $('.hero-content').css({
+                    'transform': 'translateY(' + (scroll * 0.4) + 'px)',
+                    'opacity': 1 - (scroll / 600)
+                });
+
+                // Fade In Up elements on scroll
+                $('.fade-in-up').each(function() {
+                    var bottom_of_object = $(this).offset().top + 50;
+                    var bottom_of_window = $(window).scrollTop() + $(window).height();
+
+                    if(bottom_of_window > bottom_of_object){
+                        $(this).addClass('visible');
+                    }
+                });
+            });
+
+            // Trigger scroll once to check initial positions
+            $(window).trigger('scroll');
+        });
+    </script>
+</body>
+</html>
