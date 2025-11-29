@@ -30,7 +30,7 @@
               "node_modules/aos/dist/aos.css"
             ],
             "scripts": [],
-            "baseHref": "/CVSalemKamoun.com/"
+            "baseHref": "/"
           },
           "configurations": {
             "production": {
@@ -103,7 +103,7 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-            "baseHref": "/CVSalemKamoun.com/",
+            "baseHref": "/",
             "name": "Salem Kamoun",
             "email": "kammoun.salem@gmail.com",
             "repo": "https://github.com/monsuivibipolaire-eng/CVSalemKamoun.com.git",
@@ -112,7 +112,5 @@
         }
       }
     }
-  },
-  
-  ,
-}}
+  }
+}
